@@ -1,0 +1,55 @@
+yarn:
+  stage: setup
+  interruptible: true
+  cache:
+    key:
+      files:
+        - frontend/yarn.lock
+    paths:
+      - frontend/node_modules
+    policy: pull-push
+  services: []
+  extends: .except
+
+  script:
+    - cd frontend
+    - yarn check --integrity || yarn install
+  artifacts:
+    paths:
+      - frontend/node_modules
+    expire_in: 1 day
+  timeout: 20m
+
+frontend:
+  stage: test
+  interruptible: true
+  before_script:
+    - bundle config --global jobs "$(nproc)"
+    - bundle config --local path 'vendor/gems'
+
+    - "echo -e \"test:\n  adapter: postgresql\n  host: postgres\n  database: ci_test\n  username: runner\n  password: runner\" > config/database.yml"
+    - bundle check
+    - RAILS_ENV=test bundle exec rails db:test:prepare
+    - RAILS_ENV=test bundle exec rails db:seed
+  extends: .except
+  needs:
+    - bundler
+    - yarn
+  script:
+    - cd frontend
+    - yarn playwright install --force chromium
+    - NODE_OPTIONS="--max-old-space-size=4096" yarn deploy
+    - (RAILS_ENV=test bundle exec rails s &) | grep -q "3000" && yarn test:gitlab-ci
+
+yarn-audit:
+  stage: security
+  extends: .security-stage-rules
+  interruptible: true
+  timeout: 20m
+  services: []
+  needs:
+    - yarn
+  script:
+    - cd frontend
+    - yarn check --integrity
+    - yarn run improved-yarn-audit --fail-on-missing-exclusions

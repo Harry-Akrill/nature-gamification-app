@@ -1,0 +1,5 @@
+<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+  <h1 style="color: #444;">New Friend Request</h1>
+  <p style="font-size: 16px;">You have a Friend Request on Natreon™ from: <strong><%= @friend_request.user.nickname %></strong>.</p>
+  <p style="font-size: 16px;"><%= link_to 'Check out the request here!', ENV["RAILS_ENV"] == "demo" ? "https://team02.demo1.genesys.shefcompsci.org.uk/app/social/connections" : 'http://localhost:5173/app/social/connections', style: 'color: #337ab7; text-decoration: none;' %></p>
+</div>
