@@ -2,7 +2,7 @@ Nature Gamification App
 
 Overview
 
-This project is a web application built using Ruby on Rails, JavaScript, and the Svelte framework. It gamifies user interactions with nature by offering achievement tracking, social features, and a map that highlights nature-related points of interest. Users can create profiles, track their nature-related activities, and earn rewards.
+This project is a web application built primarily using Ruby on Rails, TypeScript, and the Svelte framework. It gamifies user interactions with nature by offering achievement tracking, social features, and a map that highlights nature-related points of interest. Users can create profiles, track their nature-related activities, and earn rewards.
 
 Features
 
